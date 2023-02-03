@@ -9,86 +9,86 @@ using SS12CarWashing.Models;
 
 namespace SS12CarWashing.Controllers;
 
-public class CustomerController : Controller
+public class BrandsController : Controller
 {
     private readonly AppDbContext _context;
 
-    public CustomerController(AppDbContext context)
+    public BrandsController(AppDbContext context)
     {
         _context = context;
     }
 
-    // GET: Customer
+    // GET: Brands
     public async Task<IActionResult> Index()
     {
-          return View(await _context.Customer.ToListAsync());
+          return View(await _context.Brand.ToListAsync());
     }
 
-    // GET: Customer/Details/5
+    // GET: Brands/Details/5
     public async Task<IActionResult> Details(Guid? id)
     {
-        if (id == null || _context.Customer == null)
+        if (id == null || _context.Brand == null)
         {
             return NotFound();
         }
 
-        var customer = await _context.Customer
-            .FirstOrDefaultAsync(m => m.CustomerId == id);
-        if (customer == null)
+        var brand = await _context.Brand
+            .FirstOrDefaultAsync(m => m.BrandId == id);
+        if (brand == null)
         {
             return NotFound();
         }
 
-        return View(customer);
+        return View(brand);
     }
 
-    // GET: Customer/Create
+    // GET: Brands/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: Customer/Create
+    // POST: Brands/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CustomerId,CustomerName,Email,PhoneNumber,Address")] Customer customer)
+    public async Task<IActionResult> Create([Bind("BrandId,BrandName")] Brand brand)
     {
         if (ModelState.IsValid)
         {
-            customer.CustomerId = Guid.NewGuid();
-            _context.Add(customer);
+            brand.BrandId = Guid.NewGuid();
+            _context.Add(brand);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(customer);
+        return View(brand);
     }
 
-    // GET: Customer/Edit/5
+    // GET: Brands/Edit/5
     public async Task<IActionResult> Edit(Guid? id)
     {
-        if (id == null || _context.Customer == null)
+        if (id == null || _context.Brand == null)
         {
             return NotFound();
         }
 
-        var customer = await _context.Customer.FindAsync(id);
-        if (customer == null)
+        var brand = await _context.Brand.FindAsync(id);
+        if (brand == null)
         {
             return NotFound();
         }
-        return View(customer);
+        return View(brand);
     }
 
-    // POST: Customer/Edit/5
+    // POST: Brands/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("CustomerId,CustomerName,Email,PhoneNumber,Address")] Customer customer)
+    public async Task<IActionResult> Edit(Guid id, [Bind("BrandId,BrandName")] Brand brand)
     {
-        if (id != customer.CustomerId)
+        if (id != brand.BrandId)
         {
             return NotFound();
         }
@@ -97,12 +97,12 @@ public class CustomerController : Controller
         {
             try
             {
-                _context.Update(customer);
+                _context.Update(brand);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(customer.CustomerId))
+                if (!BrandExists(brand.BrandId))
                 {
                     return NotFound();
                 }
@@ -113,48 +113,48 @@ public class CustomerController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(customer);
+        return View(brand);
     }
 
-    // GET: Customer/Delete/5
+    // GET: Brands/Delete/5
     public async Task<IActionResult> Delete(Guid? id)
     {
-        if (id == null || _context.Customer == null)
+        if (id == null || _context.Brand == null)
         {
             return NotFound();
         }
 
-        var customer = await _context.Customer
-            .FirstOrDefaultAsync(m => m.CustomerId == id);
-        if (customer == null)
+        var brand = await _context.Brand
+            .FirstOrDefaultAsync(m => m.BrandId == id);
+        if (brand == null)
         {
             return NotFound();
         }
 
-        return View(customer);
+        return View(brand);
     }
 
-    // POST: Customer/Delete/5
+    // POST: Brands/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        if (_context.Customer == null)
+        if (_context.Brand == null)
         {
-            return Problem("Entity set 'AppDbContext.Customer'  is null.");
+            return Problem("Entity set 'AppDbContext.Brand'  is null.");
         }
-        var customer = await _context.Customer.FindAsync(id);
-        if (customer != null)
+        var brand = await _context.Brand.FindAsync(id);
+        if (brand != null)
         {
-            _context.Customer.Remove(customer);
+            _context.Brand.Remove(brand);
         }
         
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool CustomerExists(Guid id)
+    private bool BrandExists(Guid id)
     {
-      return _context.Customer.Any(e => e.CustomerId == id);
+      return _context.Brand.Any(e => e.BrandId == id);
     }
 }
