@@ -14,4 +14,5 @@ public class AppDbContext:DbContext
 	public DbSet<Model> Models { get; set; }
 	public DbSet<ItemType> ItemType { get; set; }
 	public DbSet<OilType> OilType { get; set; }
+	public DbSet<Item> Item { get; set; }
 }

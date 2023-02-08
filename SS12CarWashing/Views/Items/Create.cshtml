@@ -1,0 +1,81 @@
+﻿@model SS12CarWashing.Models.Item
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Item</h4>
+<hr />
+    <form asp-action="Create">
+        <div class="row">
+    <div class="col-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ItemTypeId" class="control-label"></label>
+                <select asp-for="ItemTypeId" class ="form-control" asp-items="ViewBag.ItemTypeId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ItemName" class="control-label"></label>
+                <input asp-for="ItemName" class="form-control" />
+                <span asp-validation-for="ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label"></label>
+                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands">
+                    <option value="">Please select...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelId" class="control-label"></label>
+                <select asp-for="ModelId" class="form-control" asp-items="ViewBag.Models">
+                    <option value="">Please select..</option>
+                </select>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsStock" /> @Html.DisplayNameFor(model => model.IsStock)
+                </label>
+            </div>
+    </div>
+    <div class="col-4">
+         <div class="form-group">
+                <label asp-for="QtyOnHand" class="control-label"></label>
+                <input asp-for="QtyOnHand" class="form-control" />
+                <span asp-validation-for="QtyOnHand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OilTypeId" class="control-label"></label>
+                <select asp-for="OilTypeId" class="form-control" asp-items="ViewBag.OilTypes">
+                    <option value="">Please select...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input asp-for="Size" class="form-control" />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+    </div>
+    </div>
+     </form>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
