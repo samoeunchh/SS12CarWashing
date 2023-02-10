@@ -19,22 +19,7 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BrandId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModelId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsStock)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.QtyOnHand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OilTypeId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Size)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Image)
@@ -47,7 +32,8 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            var image = string.IsNullOrEmpty(item.Image) ? "" : "/Uploads/"+  item.Image;
+            <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ItemName)
             </td>
@@ -55,25 +41,10 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BrandId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModelId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsStock)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.QtyOnHand)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OilTypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                <img src="@image" style="width:auto;Height:100px;"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ItemType.ItemTypeName)

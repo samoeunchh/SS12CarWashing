@@ -1,4 +1,4 @@
-﻿@model SS12CarWashing.Models.Item
+﻿@model SS12CarWashing.Models.ItemDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +6,7 @@
 
 <h4>Item</h4>
 <hr />
-    <form asp-action="Create">
+    <form asp-action="Create" enctype="multipart/form-data">
         <div class="row">
     <div class="col-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -62,7 +62,6 @@
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
