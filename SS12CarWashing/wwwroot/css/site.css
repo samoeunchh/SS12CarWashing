@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+img.saleItem{
+    height:100px;
+    width:auto;
+}

@@ -1,0 +1,98 @@
+﻿@model SS12CarWashing.Models.Sale
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="row">
+    <div class="col-6">
+        @foreach(var item in ViewBag.ItemTypes)
+        {
+            <a onclick=GetItemByTypeId("@item.ItemTypeId"); class="btn btn-primary">@item.ItemTypeName</a>
+        }
+    </div>
+    <div class="col-3">
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+            </div>   
+    </div>
+    <div class="col-3">
+         <div class="form-group">
+                <label asp-for="IssueDate" class="control-label"></label>
+                <input asp-for="IssueDate" class="form-control" />
+                <span asp-validation-for="IssueDate" class="text-danger"></span>
+         </div>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-6">
+        <div id="ItemList"></div>
+    </div>
+    <div class="col-6">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-9"></div>
+    <div class="col-3">
+         <div class="form-group">
+                <label asp-for="Total" class="control-label"></label>
+                <input asp-for="Total" class="form-control" />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount" class="control-label"></label>
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GrandTotal" class="control-label"></label>
+                <input asp-for="GrandTotal" class="form-control" />
+                <span asp-validation-for="GrandTotal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function GetItemByTypeId(id){
+            $.ajax({
+                method:"GET",
+                url:"/Sales/GetItemByType/?Id="+ id,
+                contentType:"application/json",
+                success:function(data){
+                    $.each(data,function(i,v){
+                        console.log(v);
+                        var items="<div><h4>"+ v.itemName;
+                        items += "</h4>";
+                        items += "<img class='saleItem' src='/Uploads/"+ v.image +"'/>";
+                        items += " Price: "+ v.price;
+                        items += "</div>";
+                        $("#ItemList").append(items);
+                    });
+                },error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+}
