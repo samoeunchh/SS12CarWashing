@@ -30,7 +30,7 @@
         <div id="ItemList"></div>
     </div>
     <div class="col-6">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id='t1'>
             <thead>
                 <tr>
                     <th>Item Name</th>
@@ -40,6 +40,7 @@
                     <th></th>
                 </tr>
             </thead>
+            <tbody></tbody>
         </table>
     </div>
 </div>
@@ -48,17 +49,17 @@
     <div class="col-3">
          <div class="form-group">
                 <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
+                <input asp-for="Total" class="form-control" readonly value="0" />
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
+                <input asp-for="Discount" class="form-control" value="0"/>
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GrandTotal" class="control-label"></label>
-                <input asp-for="GrandTotal" class="form-control" />
+                <input asp-for="GrandTotal" class="form-control" readonly value="0" />
                 <span asp-validation-for="GrandTotal" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,15 +75,44 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        $(document).ready(function(){
+            $("#Discount").blur(function(){
+                    CalcTotal();
+            });
+            $("#t1").on("click",".remove",function(){
+                //$("#t1 > tbody > tr").each(function(){
+                //    var qty = $(this).closest("tr").find("td:eq(2)").text();
+                //    if(Number(qty) <= 1){
+                //        //Remove row
+                //         var tr = $(this).closest("tr").remove();
+                //    }else{
+                //        //Reduce Qty
+                //        $(this).closest("tr").find("td:eq(2)").text(Number(qty) - 1);
+                //    }
+                //     CalcTotal();
+                //})
+                 var qty = $(this).closest("tr").find("td:eq(2)").text();
+                if(Number(qty) <= 1){
+                    //Remove row
+                        var tr = $(this).closest("tr").remove();
+                }else{
+                    //Reduce Qty
+                    var price = $(this).closest("tr").find("td:eq(1)").text();
+                    $(this).closest("tr").find("td:eq(2)").text(Number(qty) - 1);
+                    $(this).closest("tr").find("td:eq(3)").text((Number(qty) - 1) * Number(price));
+                }  
+                CalcTotal();
+            });
+        });
         function GetItemByTypeId(id){
+             $("#ItemList").empty();
             $.ajax({
                 method:"GET",
                 url:"/Sales/GetItemByType/?Id="+ id,
                 contentType:"application/json",
                 success:function(data){
                     $.each(data,function(i,v){
-                        console.log(v);
-                        var items="<div><h4>"+ v.itemName;
+                        var items="<div onClick=AddCart('"+ v.itemName +"',"+ v.price +",'"+ v.itemId +"');><h4>"+ v.itemName;
                         items += "</h4>";
                         items += "<img class='saleItem' src='/Uploads/"+ v.image +"'/>";
                         items += " Price: "+ v.price;
@@ -93,6 +123,42 @@
                     console.log(error);
                 }
             });
+        }
+        function AddCart(name,price,id){
+            var b=false;
+            $("#t1 > tbody > tr").each(function(){
+                var itemName = $(this).closest("tr").find("td:eq(0)").text();
+                if(itemName === name){
+                    b=true;
+                    var qty = $(this).closest("tr").find("td:eq(2)").text();
+                    var price = $(this).closest("tr").find("td:eq(1)").text();
+                    $(this).closest("tr").find("td:eq(2)").text(Number(qty) + 1);
+                    $(this).closest("tr").find("td:eq(3)").text((Number(qty) + 1) * Number(price));
+                    CalcTotal();
+                }
+            });
+            if(b==false){
+                var row ="<tr><td>"+ name;
+                row += "</td><td>"+ price;
+                row += "</td><td>1</td>";
+                row += "<td>"+ price;
+                row += "</td><td><button class='btn btn-warning remove'>-</button></td></tr>";
+                $("#t1").append(row);
+                CalcTotal();
+            }
+           return;
+        }
+        function CalcTotal(){
+            var total =0;
+            var discount=0;
+            var grandTotal=0;
+            $("#t1 > tbody > tr").each(function(){
+               var amount =  $(this).closest("tr").find("td:eq(3)").text();
+               total += Number(amount);
+            });
+            $("#Total").val(total);
+            discount = total * Number($("#Discount").val()) / 100;
+            $("#GrandTotal").val(total - discount);
         }
     </script>
 }

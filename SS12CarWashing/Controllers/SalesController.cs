@@ -47,7 +47,7 @@ namespace SS12CarWashing.Controllers
         // GET: Sales/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "PhoneNumber");
+            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "CustomerName");
             ViewData["ItemTypes"] =await _context.ItemType.ToListAsync();
             return View();
         }
