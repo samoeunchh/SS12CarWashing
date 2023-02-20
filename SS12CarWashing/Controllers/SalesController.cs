@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using SS12CarWashing.Models;
 
@@ -56,20 +57,73 @@ namespace SS12CarWashing.Controllers
             var items = await _context.Item.Where(x => x.ItemTypeId.Equals(Id)).ToListAsync();
             return Json(items);
         }
+        public async Task<IActionResult> Print(Guid Id)
+        {
+            var sale =await (from s in _context.Sale
+                        join c in _context.Customer
+                        on s.CustomerId equals c.CustomerId
+                        where s.SaleId == Id
+                        select new SaleDTO
+                        {
+                            SaleId=s.SaleId,
+                            CustomerName=c.CustomerName,
+                            InvoiceNumber=s.InvoiceNumber,
+                            IssueDate=s.IssueDate,
+                            Total=s.Total,
+                            Discount=s.Discount,
+                            GrandTotal=s.GrandTotal,
+                            SaleDetails = GetSaleDetail(Id)
+                        }).FirstOrDefaultAsync();
+            return View(sale);
+        }
+        private  List<SaleDetailDTO> GetSaleDetail(Guid Id)
+        {
+            return (from sd in _context.SaleDetail
+                               join i in _context.Item
+                               on sd.ItemId equals i.ItemId
+                               where sd.SaleId == Id
+                               select new SaleDetailDTO
+                               {
+                                   SaleId=sd.SaleId,
+                                   ItemName=i.ItemName,
+                                   Price=sd.Price,
+                                   Qty=sd.Qty,
+                                   Amount=sd.Amount,
+                               }).ToList();
+        }
         // POST: Sales/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SaleId,CustomerId,IssueDate,InvoiceNumber,Total,Discount,GrandTotal")] Sale sale)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Sale sale)
         {
             if (ModelState.IsValid)
             {
                 sale.SaleId = Guid.NewGuid();
+                sale.InvoiceNumber = DateTime.Now.ToString("yyyyMMddHHmmssff");
+                if (sale.SaleDetails != null)
+                {
+                    for(int i = 0; i < sale.SaleDetails.Count; i++)
+                    {
+                        sale.SaleDetails[i].SaleId = sale.SaleId;
+                        sale.SaleDetails[i].SaleDetailId = Guid.NewGuid();
+                        var item = sale.SaleDetails[i];
+                        // Reduce Stock
+                        var product = _context.Item.Where(x => x.ItemId == item.ItemId && x.IsStock == true).FirstOrDefault();
+                        if(product is not null)
+                        {
+                            _context.Item.Attach(product);
+                            product.QtyOnHand -= item.Qty;
+                        }
+                    }
+                }
+               
                 _context.Add(sale);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(sale.SaleId);
             }
+            ViewData["ItemTypes"] = await _context.ItemType.ToListAsync();
             ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "PhoneNumber", sale.CustomerId);
             return View(sale);
         }

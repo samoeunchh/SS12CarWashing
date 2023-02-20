@@ -24,3 +24,8 @@ img.saleItem{
     height:100px;
     width:auto;
 }
+@media print{
+    .noprint{
+        display:none;
+    }
+}

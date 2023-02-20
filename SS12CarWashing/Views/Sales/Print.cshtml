@@ -1,0 +1,47 @@
+﻿@model SS12CarWashing.Models.SaleDTO
+@{
+    ViewData["Title"] = "Print";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            Customer Name: @Model.CustomerName <br/>
+            Issue Date: @Model.IssueDate.ToString("dd-MM-yyyy")
+        </div>
+         <div class="col-6">
+            Invoice Number: @Model.InvoiceNumber <br/>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class='col-12'>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.SaleDetails)
+                    {
+                        <tr>
+                            <td>@item.ItemName</td>
+                            <td>@item.Price</td>
+                            <td>@item.Qty </td>
+                            <td>@item.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        window.print();
+    </script>
+}
+

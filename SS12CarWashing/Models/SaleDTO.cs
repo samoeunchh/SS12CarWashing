@@ -1,16 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SS12CarWashing.Models;
-
-public class Sale
+public class SaleDTO
 {
     [Key]
     public Guid SaleId { get; set; }
-    [ForeignKey("Customer")]
-    [Display(Name ="Customer Name")]
-    public Guid CustomerId { get; set; }
-    [Display(Name ="Issue Date")]
+    [Display(Name = "Customer Name")]
+    public string CustomerName { get; set; }
+    [Display(Name = "Issue Date")]
     [DataType(DataType.Date)]
     public DateTime IssueDate { get; set; }
     [MaxLength(20)]
@@ -19,5 +16,5 @@ public class Sale
     public int Discount { get; set; }
     public double GrandTotal { get; set; }
     public Customer Customer { get; set; }
-    public List<SaleDetail> SaleDetails { get; set; }
+    public List<SaleDetailDTO> SaleDetails { get; set; }
 }
