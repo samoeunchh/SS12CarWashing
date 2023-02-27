@@ -9,9 +9,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         //Connection String
-        var conString = @"Server=10.8.8.9;Database=SS12CarWashing;User Id=sa;Password=Strong.Pwd-123;TrustServerCertificate=true;";
+       
         builder.Services.AddDbContext<AppDbContext>
-            (o => o.UseSqlServer(conString));
+            (o => o.UseSqlServer(AdoDB.conString));
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 

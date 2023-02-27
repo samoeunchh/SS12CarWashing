@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewData["Title"] = "ItemNoSale";
+}
+<div class="container">
+ <div class="card noprint">
+    <div class="card-body">
+        <div class="row">
+           @* <div class="col-4">
+                <div class="form-group">
+                    <label class="form-lable">From Date</label>
+                    <input type="date" id="FromDate" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-4">
+                 <div class="form-group">
+                    <label class="form-lable">To Date</label>
+                    <input type="date" id="ToDate" class="form-control"/>
+                </div>
+            </div>*@
+            <div class="col-4">
+                <br/>
+                <button class="btn btn-primary" id="view">View</button>
+                <button class="btn btn-primary" id="print">Print</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+  <br/>
+  <div class="container">
+      <div class="row">
+          <div class="col-12">
+              <table class="table table-bordered" id="saleList">
+                  <thead>
+                      <tr>
+                          <th>Item Name</th>
+                          <th>Price</th>
+                          <th>Qty</th>
+                          <th>Image</th>
+                          <th>Item Type</th>
+                      </tr>
+                  </thead>
+                  <tbody></tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+@section Scripts{
+          <script>
+              $(document).ready(function(){
+                  $("#print").click(function(){
+                      window.print();
+                  });
+                  $("#view").click(function(){
+                    $.ajax({
+                        method:"GET",
+                        url:"/SaleReport/ItemNoSaleData",
+                        contentType:"application/json",
+                        success:function(data){
+                            console.log(data);
+                            $.each(data,function(i,v){
+                                var row ="<tr><td>"+ v.itemName;
+                                row +="</td><td>"+ v.price;
+                                row += "</td><td>"+ v.qtyOnHand;
+                                row += "</td><td><img src='/Uploads/"+ v.image +"' style='width:auto;Height:100px;' />";
+                                row += "</td><td>"+ v.itemTypeId;
+                                row += "</td></tr>";
+                                $("#saleList").append(row);
+                            });
+                        },error:function(error){
+                            console.log(error);
+                        } 
+                    });
+                  });
+              });
+          </script>
+  }
+
+

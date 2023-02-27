@@ -36,5 +36,25 @@ namespace SS12CarWashing.Controllers
         {
             return View();
         }
+        public IActionResult ItemNoSale()
+        {
+            return View();
+        }
+        public IActionResult ItemNoSaleData()
+        {
+            var db = new AdoDB();
+            var sql ="SElECT * FROM Item i INNER JOIN ItemType t ON i.ItemTypeId=t.ItemTypeId WHERE ItemId Not In(SELECT ItemId FROM SaleDetail)";
+            var reqult = db.Execute(sql);
+            List<Item> item = new List<Item>();
+            while (reqult.Read())
+            {
+                item.Add(new Item
+                {
+                    ItemName = reqult["ItemName"].ToString(),
+                    Price = double.Parse(reqult["Price"].ToString())
+                });
+            }
+            return Json(item);
+        }
     }
 }
