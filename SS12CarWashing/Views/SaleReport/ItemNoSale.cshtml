@@ -53,6 +53,7 @@
                       window.print();
                   });
                   $("#view").click(function(){
+                    $("#saleList > tbody > tr").empty();
                     $.ajax({
                         method:"GET",
                         url:"/SaleReport/ItemNoSaleData",
@@ -60,11 +61,12 @@
                         success:function(data){
                             console.log(data);
                             $.each(data,function(i,v){
+                                console.log(v);
                                 var row ="<tr><td>"+ v.itemName;
                                 row +="</td><td>"+ v.price;
                                 row += "</td><td>"+ v.qtyOnHand;
                                 row += "</td><td><img src='/Uploads/"+ v.image +"' style='width:auto;Height:100px;' />";
-                                row += "</td><td>"+ v.itemTypeId;
+                                row += "</td><td>"+ v.itemTypeName;
                                 row += "</td></tr>";
                                 $("#saleList").append(row);
                             });

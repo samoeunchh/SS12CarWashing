@@ -45,13 +45,16 @@ namespace SS12CarWashing.Controllers
             var db = new AdoDB();
             var sql ="SElECT * FROM Item i INNER JOIN ItemType t ON i.ItemTypeId=t.ItemTypeId WHERE ItemId Not In(SELECT ItemId FROM SaleDetail)";
             var reqult = db.Execute(sql);
-            List<Item> item = new List<Item>();
+            var item = new List<ItemViewModel>();
             while (reqult.Read())
             {
-                item.Add(new Item
+                item.Add(new ItemViewModel
                 {
                     ItemName = reqult["ItemName"].ToString(),
-                    Price = double.Parse(reqult["Price"].ToString())
+                    Price = double.Parse(reqult["Price"].ToString()),
+                    Image = reqult["Image"].ToString(),
+                    QtyOnHand = int.Parse(reqult["QtyOnHand"].ToString()),
+                    ItemTypeName = reqult["ItemTypeName"].ToString()
                 });
             }
             return Json(item);

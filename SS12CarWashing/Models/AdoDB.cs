@@ -5,7 +5,7 @@ namespace SS12CarWashing.Models;
 public class AdoDB
 {
     public SqlConnection connection;
-    public static string conString = @"Server=10.10.10.22;Database=SS12CarWashing;User Id=sa;Password=Strong.Pwd-123;TrustServerCertificate=true;";
+    public static string conString = @"Server=10.8.8.9;Database=SS12CarWashing;User Id=sa;Password=Strong.Pwd-123;TrustServerCertificate=true;";
     public AdoDB()
     {
         connection = new SqlConnection(conString);
